@@ -14,17 +14,20 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
-let g:airline#extensions#tabline#enabled = 1
+"vim airline stuff
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#ale#enabled = 1
-
+let g:airline_extensions = ['ale', 'tabline', 'netrw', 'term', 'wordcount','po']
+set encoding=utf-8
+let g:airline_symbols.maxlinenr = 'ᵻ '
+let g:airline_symbols.linenr = ' ➜'
+"--------
 ":nohl a good command to remove highlights
 autocmd InsertEnter,Insertleave * set cul!
 set autochdir
 set nocompatible
 syntax enable
 set number
-set hls
+set hls!
 if(has("termguicolors"))
     set termguicolors
 endif
