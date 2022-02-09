@@ -114,4 +114,9 @@ for key in ['<Up>', '<Down>', '<Left>', '<Right>']
   exec 'cnoremap' key '<Nop>'
 endfor
 
+"custom vim commnad for compilation
+command Gpp execute '!g++ % -g -o test.exe'
+command Gcc execute '!gcc % -g -o test.exe'
+
+
 
