@@ -6,22 +6,53 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 
 Plug 'https://github.com/pseewald/vim-anyfold.git'
 
-Plug 'frazrepo/vim-rainbow'
-
 Plug 'dense-analysis/ale'
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-call plug#end()
-"vim airline stuff
-let g:airline_powerline_fonts = 1
-let g:airline_extensions = ['ale', 'tabline', 'netrw', 'term', 'wordcount','po']
-set encoding=utf-8
+Plug 'mattn/emmet-vim'
+"file trees
+Plug 'https://github.com/preservim/nerdtree.git'
+"surround
+Plug 'https://github.com/AndrewRadev/tagalong.vim.git'
 
+call plug#end()
+
+syntax enable
+"nerdtree
+"auto close tab if it only contains nerdtree
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+"start nerdtree and put cursor in file buffer
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
+"auto open nerdtree when newtab is opened
+autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
+"auto change nerdtree to dir of opened file
+autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
+"toggle nerdtree
+map <C-t> :NERDTreeToggle<CR>
+
+
+"vim tagalong
+let g:tagalong_filetypes = ['html']
+
+"vim airline stuff
+
+let g:airline_powerline_fonts = 1
+let g:airline_extensions = ['ale', 'tabline', 'netrw', 'term', 'wordcount']
+set encoding=utf-8
+let g:airline#extensions#tabline#enabled = 1 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
+
+"emmet stuff
+let g:user_emmet_mode='n'
+let g:user_emmet_install_global = 0
+autocmd Filetype html,css EmmetInstall
+let g:user_emmet_leader_key =','
 
 " unicode symbols
 let g:airline_left_sep = '»'
@@ -31,27 +62,25 @@ let g:airline_right_sep = '◀'
 let g:airline_symbols.linenr = '␊'
 let g:airline_symbols.linenr = '␤'
 let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.branch = 'Ÿ'
 let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
 
 " airline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
+let g:airline_left_sep = '▶'
+let g:airline_left_alt_sep = '>'
+let g:airline_right_sep = '◀'
+let g:airline_right_alt_sep = '❰'
+let g:airline_symbols.branch = '❰'
+let g:airline_symbols.readonly = 'R:'
 let g:airline_symbols.maxlinenr = 'ᵻ '
-let g:airline_symbols.linenr = ' ➜'
+let g:airline_symbols.linenr = ' ➜ '
 "--------
 ":nohl a good command to remove highlights
 autocmd InsertEnter,Insertleave * set cul!
 set autochdir
 set nocompatible
-syntax enable
 set number
 set hls!
 if(has("termguicolors"))
