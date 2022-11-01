@@ -14,7 +14,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'mattn/emmet-vim'
 "file trees
 Plug 'https://github.com/preservim/nerdtree.git'
-"surround
+"tagalong
 Plug 'https://github.com/AndrewRadev/tagalong.vim.git'
 "surround
 Plug 'https://github.com/tpope/vim-surround.git'
@@ -26,15 +26,15 @@ Plug 'https://github.com/lilydjwg/colorizer.git'
 Plug 'https://github.com/tpope/vim-fugitive.git'
 "match tags html/js
 Plug 'https://github.com/leafOfTree/vim-matchtag.git'
-"template literals html/js
-Plug 'jonsmithers/vim-html-template-literals'
-Plug 'pangloss/vim-javascript'
+"various languages syntax
+Plug 'sheerun/vim-polyglot'
+"vim comments
+Plug 'https://github.com/tpope/vim-commentary.git'
 
 call plug#end()
 
 syntax enable
 
-set termguicolors
 "nerdtree
 "hidden files 
 let NERDTreesShowHidden=1
@@ -59,8 +59,13 @@ autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | e
 "vim tagalong
 let g:tagalong_filetypes = ['html']
 
+"vim matching tags
+let g:vim_matchtag_enable_by_default = 1
+let g:vim_matchtag_files = '*.html,*.xml,*.js,*.jsx,*.vue,*.svelte,*.jsp'
+
 "colorizer
 let g:colorizer_startup = 0
+
 "vim airline stuff
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_powerline_fonts = 1
@@ -76,10 +81,14 @@ let g:user_emmet_mode='nv'
 let g:user_emmet_install_global = 0
 autocmd Filetype html,css EmmetInstall
 let g:user_emmet_leader_key =','
+let g:user_emmet_expandabbr_key='<Tab>'
 
-"html syntax
-let g:htl_all_templates = 1
+"markdown
+let g:vim_markdown_folding_disabled = 1
 
+"airline stuff
+"allowing for vimfugitive integration
+let g:airline#extensions#branch#enabled = 1
 " unicode symbols
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
@@ -103,25 +112,27 @@ set nocompatible
 set number
 set hls!
 colorscheme night-owl
-hi Folded gui=underline guifg =#53857c
+hi Folded gui=underline guifg=#53857c
 let g:anyofold_fold_comments=1
 let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_hihglight = 1
 let g:cpp_class_scope_highlight = 1
 
 "Various color changes
+set termguicolors
+hi link Boolean Conditional
 hi LineNr guifg=#53857c
 hi CursorLineNr guifg=#36d9c0 guibg=#072838
 hi Cursor guibg=#072838
-hi Conditinal guifg=#00cccc
-hi Special guifg=#ffa500 
-hi Repeat guifg=#ffa089 
+hi Special guifg=#00cccc
+hi Conditional guifg=#fff600 
+hi Repeat guifg=#ffa500 
 hi Keyword guifg=#32cd32
 hi Character guifg=#ff4500 
 hi Number guifg=#cb4154
 hi link Number Float 
-hi Conditional guifg=#ffff00
-hi Operator guifg=#daa520 
+hi Statement guifg=#00ffef 
+hi Operator guifg=#fcc200 
 hi SpellBad guifg=NONE guibg=#ff0000 
 hi htmlTag guifg=#5f9ea0 ctermfg=243 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 hi link htmlEndTag htmlTag
@@ -132,7 +143,13 @@ hi htmlHead guifg=#00b7eb
 hi htmlValue guifg=#e6be8a
 hi IncSearch guifg=NONE guibg=#3ab09e gui=underline 
 hi Search guifg=#f5fffa  guibg=#3ab09e gui=underline 
-
+hi link jsParens Special
+hi link jsNumber Number
+hi link jsIfElseBraces Special 
+hi link jsConditional Conditional 
+hi link jsSpecial Special
+hi link jsRepeat Repeat
+hi link jsOperator Operator
 "vim config changes
 set nuw=4
 set smartindent
@@ -162,7 +179,6 @@ set belloff=all
 set hidden
 "cursor
 set cursorlineopt=number
-set cursorline
 
 
 "easier window navigation. can simply control and hjkl into a window
@@ -190,6 +206,17 @@ for key in ['<Up>', '<Down>', '<Left>', '<Right>']
   exec 'cnoremap' key '<Nop>'
 endfor
 
-
+"various commands
+"open current file in explorer
+nmap <C-s> :!start .<CR>
+"find syntax for something under cursor
+" Show syntax highlighting groups for word under cursor
+nmap <leader>z :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 
