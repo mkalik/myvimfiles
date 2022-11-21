@@ -12,20 +12,20 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 "emmet
 Plug 'mattn/emmet-vim'
-"file trees
+"NERDtree
 Plug 'https://github.com/preservim/nerdtree.git'
+"NERDtree visual selection
+Plug 'https://github.com/PhilRunninger/nerdtree-visual-selection.git'
+"NERDtree icons
+Plug 'ryanoasis/vim-devicons'
 "tagalong
 Plug 'https://github.com/AndrewRadev/tagalong.vim.git'
 "surround
 Plug 'https://github.com/tpope/vim-surround.git'
-"nerd tree icons
-Plug 'ryanoasis/vim-devicons'
 "colorizer
 Plug 'https://github.com/lilydjwg/colorizer.git'
 "vim git plugin
 Plug 'https://github.com/tpope/vim-fugitive.git'
-"match tags html/js
-Plug 'https://github.com/leafOfTree/vim-matchtag.git'
 "various languages syntax
 Plug 'sheerun/vim-polyglot'
 "vim comments
@@ -45,36 +45,22 @@ augroup DIRCHANGE
     au!
     autocmd DirChanged global :NERDTreeCWD
 augroup END
-"auto opens nerdtree
-autocmd VimEnter * NERDTree 
  "closes vim if nerdtree is the only thing open
 autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
 autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
     \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 " Start NERDTree. If a file is specified, move the cursor to its window.
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
+"Visual NERDTREE
+let g:nerdtree_vis_confirm_open=0
 
 "vim tagalong
 let g:tagalong_filetypes = ['html']
 
-"vim matching tags
-let g:vim_matchtag_enable_by_default = 1
-let g:vim_matchtag_files = '*.html,*.xml,*.js,*.jsx,*.vue,*.svelte,*.jsp'
-
 "colorizer
 let g:colorizer_startup = 0
-
-"vim airline stuff
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_powerline_fonts = 1
-let g:airline_extensions = ['ale', 'tabline', 'netrw', 'term', 'wordcount']
-set encoding=UTF-8
-let g:airline#extensions#tabline#enabled = 1 
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
 
 "emmet stuff
 let g:user_emmet_mode='nv'
@@ -83,12 +69,45 @@ autocmd Filetype html,css EmmetInstall
 let g:user_emmet_leader_key =','
 let g:user_emmet_expandabbr_key='<Tab>'
 
-"markdown
-let g:vim_markdown_folding_disabled = 1
+""polyglot stuff
+""disabling polyglot for js
+"let g:polyglot_disabled = ['ftdetect']
 
-"airline stuff
+"ALE stuff
+"show on status line
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_text_changed = 1
+"let g:airline#extensions#ale#enabled = 1
+""load ale
+""show errors on text modification
+let g:ale_set_highlights = 1
+"let g:ale_loaded = 1
+let g:ale_sign_column_always = 1
+""errors in colunmns
+
+"linter for ALE
+let g:ale_linters = {
+\ 'javascript' : ['eslint', 'tsserver'],
+\ 'html': ['vscodehtml'],
+\ 'css' :['vscodecss'],
+\}
+let g:ale_fixers = {
+\ 'javascript' : ['prettier'],
+\}
+let g:ale_fix_on_save = 1
+"vim airline stuff
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline_powerline_fonts = 1
+set encoding=UTF-8
+let g:airline#extensions#tabline#enabled = 1 
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
 "allowing for vimfugitive integration
 let g:airline#extensions#branch#enabled = 1
+"for airline statusline
+let g:airline_section_error = ''
 " unicode symbols
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
@@ -100,7 +119,7 @@ let g:airline_symbols.whitespace = 'Ξ'
 " airline symbols
 let g:airline_left_alt_sep = '>'
 let g:airline_right_alt_sep = '❰'
-let g:airline_symbols.branch = '❰'
+let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = 'R:'
 let g:airline_symbols.maxlinenr = 'ᵻ '
 let g:airline_symbols.linenr = ' ➜ '
@@ -133,7 +152,6 @@ hi Number guifg=#cb4154
 hi link Number Float 
 hi Statement guifg=#00ffef 
 hi Operator guifg=#fcc200 
-hi SpellBad guifg=NONE guibg=#ff0000 
 hi htmlTag guifg=#5f9ea0 ctermfg=243 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 hi link htmlEndTag htmlTag
 hi htmlTagName guifg=#48d1cc
@@ -143,13 +161,24 @@ hi htmlHead guifg=#00b7eb
 hi htmlValue guifg=#e6be8a
 hi IncSearch guifg=NONE guibg=#3ab09e gui=underline 
 hi Search guifg=#f5fffa  guibg=#3ab09e gui=underline 
+hi jsBrackets guifg=#009698 
+hi jsfunctionkey guifg=#6a5acd 
+hi jsobjectkey guifg=#dda0dd 
+hi link jsRepeatBraces Keyword
 hi link jsParens Special
+hi link jsObjectBraces Keyword
+hi link jsFuncparens Special 
+hi link jsFuncBraces Keyword
+hi link jsBraces Repeat
 hi link jsNumber Number
 hi link jsIfElseBraces Special 
 hi link jsConditional Conditional 
 hi link jsSpecial Special
 hi link jsRepeat Repeat
 hi link jsOperator Operator
+hi link vimNotation Operator
+hi link vimBracket vimNotation
+hi Todo guifg=#ffb347 guibg=NONE gui=undercurl cterm=underline
 "vim config changes
 set nuw=4
 set smartindent
@@ -179,6 +208,7 @@ set belloff=all
 set hidden
 "cursor
 set cursorlineopt=number
+set splitright
 
 
 "easier window navigation. can simply control and hjkl into a window
