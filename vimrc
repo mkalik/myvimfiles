@@ -34,7 +34,7 @@ Plug 'https://github.com/tpope/vim-commentary.git'
 call plug#end()
 
 syntax enable
-
+set noshowmode
 "nerdtree
 "hidden files 
 let NERDTreesShowHidden=1
@@ -51,7 +51,7 @@ autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTa
 autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
     \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 " Start NERDTree. If a file is specified, move the cursor to its window.
-" autocmd StdinReadPre * let s:std_in=1
+autocmd StdinReadPre * let s:std_in=1
 " autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
 "Visual NERDTREE
 let g:nerdtree_vis_confirm_open=0
@@ -76,11 +76,9 @@ let g:user_emmet_expandabbr_key='<Tab>'
 "ALE stuff
 "show on status line
 let g:ale_lint_on_insert_leave = 1
-let g:ale_lint_on_text_changed = 1
 "let g:airline#extensions#ale#enabled = 1
 ""load ale
-""show errors on text modification
-let g:ale_set_highlights = 1
+"show errors on text modification
 "let g:ale_loaded = 1
 let g:ale_sign_column_always = 1
 ""errors in colunmns
@@ -95,7 +93,12 @@ let g:ale_fixers = {
 \ 'javascript' : ['prettier'],
 \}
 let g:ale_fix_on_save = 1
+
 "vim airline stuff
+let g:airline#extensions#default#layout = [
+\ [ 'a', 'b', 'c' ],
+\ [ 'x', 'y', 'z']
+\ ]
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline_powerline_fonts = 1
@@ -117,7 +120,7 @@ let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.whitespace = 'Ξ'
 
 " airline symbols
-let g:airline_left_alt_sep = '>'
+let g:airline_left_alt_sep = '❱'
 let g:airline_right_alt_sep = '❰'
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = 'R:'
@@ -130,7 +133,6 @@ set autochdir
 set nocompatible
 set number
 set hls!
-colorscheme night-owl
 hi Folded gui=underline guifg=#53857c
 let g:anyofold_fold_comments=1
 let g:cpp_member_variable_highlight = 1
@@ -138,10 +140,14 @@ let g:cpp_class_decl_hihglight = 1
 let g:cpp_class_scope_highlight = 1
 
 "Various color changes
+set fillchars+=vert:\|
+colorscheme night-owl
+set background=dark
 set termguicolors
 hi link Boolean Conditional
-hi LineNr guifg=#53857c
-hi CursorLineNr guifg=#36d9c0 guibg=#072838
+hi LineNr guifg=#53857c guibg=NONE
+hi CursorLineNr guifg=#ceff00 guibg=NONE
+"guibg=#072838
 hi Cursor guibg=#072838
 hi Special guifg=#00cccc
 hi Conditional guifg=#fff600 
@@ -164,6 +170,7 @@ hi Search guifg=#f5fffa  guibg=#3ab09e gui=underline
 hi jsBrackets guifg=#009698 
 hi jsfunctionkey guifg=#6a5acd 
 hi jsobjectkey guifg=#dda0dd 
+hi VertSplit guifg=#008080 guibg=bg
 hi link jsRepeatBraces Keyword
 hi link jsParens Special
 hi link jsObjectBraces Keyword
@@ -179,6 +186,8 @@ hi link jsOperator Operator
 hi link vimNotation Operator
 hi link vimBracket vimNotation
 hi Todo guifg=#ffb347 guibg=NONE gui=undercurl cterm=underline
+hi spellbad guifg=#ed2932 guibg=NONE gui=undercurl cterm=underline
+hi Error guifg=#ed2939 guibg=NONE gui=undercurl cterm=underline
 "vim config changes
 set nuw=4
 set smartindent
@@ -201,7 +210,7 @@ set cmdheight=1
 set wrap
 set textwidth=0
 set wrapmargin=0
-set nospell
+" set nospell
 set nolazyredraw
 set so=999
 set belloff=all
