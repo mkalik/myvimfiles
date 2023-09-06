@@ -60,7 +60,7 @@ autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
 
 "dev-icons
 let g:webdevicons_enable_nerdtree = 1
-let g:webdevicons_conceal_nerdtree_brackets = 1
+" let g:webdevicons_conceal_nerdtree_brackets = 1
 
 "vim tagalong
 let g:tagalong_filetypes = ['html', 'javascript']
@@ -86,13 +86,14 @@ let g:ale_sign_column_always = 1
 "linter for ALE
 let g:ale_linters = {
 \ 'javascript' : ['eslint','tsserver'],
-\ 'JSON': ['eslint'],
+\ 'json': ['eslint'],
 \ 'html': ['vscodehtml'],
 \ 'css' :['vscodecss'],
+\ 'cpp' :['cppcheck'],
 \}
 let g:ale_fixers = {
 \ 'javascript' : ['prettier'],
-\ 'JSON':['prettier'],
+\ 'json':['prettier'],
 \ 'html' : ['prettier'],
 \}
 let g:ale_fix_on_save = 1
@@ -106,9 +107,26 @@ let g:airline#extensions#default#layout = [
 \ [ 'x', 'y', 'z']
 \ ]
 "congifgures how a file will show up in bufferlist
+
+let g:airline#extensions#tabline#show_buffers = 1
 let g:airline#extensions#tabline#fnamecollapse = 1
+let g:airline#extensions#bufferline#enabled = 1
 "shows a truncated file path in tabline
-let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#formatter = 'short_path'
+"buffer indexes in tabline
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
+nmap <leader>0 <Plug>AirlineSelectTab0
+nmap <leader>- <Plug>AirlineSelectPrevTab
+nmap <leader>+ <Plug>AirlineSelectNextTab
 "shows a shorter file path in the statusline
 let g:airline_section_c = '%t'
 let g:airline#extensions#whitespace#enabled = 0
@@ -120,6 +138,10 @@ if !exists('g:airline_symbols')
 endif
 "allowing for vimfugitive integration
 let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#branch#empty_message = ''
+let g:airline#extensions#branch#vcs_checks = ['untracked', 'dirty']
+"for NERDTREE intergration
+let g:airline#extensions#nerdtree_statusline = 1
 "for airline statusline
 let g:airline_section_error = ''
 " unicode symbols
@@ -198,7 +220,7 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
-"
+"everyother mode
 tnoremap <C-j> <C-w>j
 tnoremap <C-k> <C-w>k
 tnoremap <C-h> <C-w>h
@@ -220,7 +242,7 @@ endfor
 
 "disabling mouse
 set mouse=
-set ttymouse=
+" set ttymouse=
 
 "various commands---
 "open current file in explorer
